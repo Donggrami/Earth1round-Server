@@ -23,7 +23,7 @@ public class Profile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long profile_id;
+    private Long profileId;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -33,7 +33,7 @@ public class Profile {
     private String nickname;
 
     @Column(length = 255)
-    private String profile_img;
+    private String profileImg;
 
     @Column(nullable = false)
     private int level;
@@ -56,11 +56,11 @@ public class Profile {
     private Date updated_at;
 
     @Builder
-    public Profile(Long profile_id, User user, String nickname, String profile_img, int level, User.UserStatus status, Date created_at, Date updated_at) {
-        this.profile_id = profile_id;
+    public Profile(Long profileId, User user, String nickname, String profileImg, int level, User.UserStatus status, Date created_at, Date updated_at) {
+        this.profileId = profileId;
         this.user = user;
         this.nickname = nickname;
-        this.profile_img = profile_img;
+        this.profileImg = profileImg;
         this.level = level;
         this.status = status;
         this.created_at = created_at;
