@@ -17,7 +17,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtTokenInterceptor)
                 .excludePathPatterns("/login/kakao")
-                .excludePathPatterns("/places/dev")
-                .excludePathPatterns("/re-issue");
+                .excludePathPatterns("/login/google")
+                .excludePathPatterns("/re-issue")
+                .excludePathPatterns("/places/dev");
     }
 }
