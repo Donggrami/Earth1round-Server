@@ -1,64 +1,48 @@
 package donggrami.earth1round.src.profile;
 
 import donggrami.earth1round.config.BaseException;
+import donggrami.earth1round.src.domain.entity.Profile;
+import donggrami.earth1round.src.domain.entity.User;
 import donggrami.earth1round.src.domain.repository.ProfileRepository;
+import donggrami.earth1round.src.domain.repository.UserRepository;
 import donggrami.earth1round.src.profile.model.GetProfileRes;
-import donggrami.earth1round.src.profile.model.PostProfileReq;
-import donggrami.earth1round.src.profile.model.PostProfileRes;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
-import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
+import static donggrami.earth1round.config.BaseResponseStatus.DATABASE_ERROR;
+import static donggrami.earth1round.config.BaseResponseStatus.EMPTY_USER;
+
+@Service
+@RequiredArgsConstructor
 public class ProfileService {
+//    @Autowired
+//    private final ProfileDao profileDao;
+
     @Autowired
-    ProfileDao profileDao;
+    private final ProfileRepository profileRepository;
 
-    public Map<String, String> getMessage(){
-        Map<String, String> map = profileDao.getMessage();
-        return map;
-    }
+    @Autowired
+    private final UserRepository userRepository;
 
-    public Profile getNicknameByProfileId(Long profileId) {
-//        return (Profile) profileDao.getNicknameByProfileId(profileId);
-        return profileDao.getNicknameByProfileId(profileId);
-    }
-
-    public Profile getImgByProfileId(Long profileId) {
-        return profileDao.getImgByProfileId(profileId);
-    }
-
-    public byte[] getImage(String imagePath) throws Exception {
-        System.out.println(imagePath);
-        FileInputStream inputStream = null;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        String absolutePath = new File("").getAbsolutePath() + "\\";
-        try {
-            inputStream = new FileInputStream(absolutePath + imagePath);
-        }
-        catch (FileNotFoundException e) {
-            throw new Exception("해당 파일을 찾을 수 없습니다.");
-        }
-        int readCount = 0;
-        byte[] buffer = new byte[1024];
-        byte[] fileArray = null;
-
-        try {
-            while((readCount = inputStream.read(buffer)) != -1){
-                outputStream.write(buffer, 0, readCount);
+    public GetProfileRes getMypageProfile(Long user_id) throws BaseException {
+        try{
+            Optional<User> user = userRepository.findById(user_id);
+            GetProfileRes getProfileRes = null;
+            if(user.isPresent()) {
+                Profile profile = profileRepository.findByUser(user.get());
+                getProfileRes = new GetProfileRes(profile.getNickname(), profile.getProfile_img());
             }
-            fileArray = outputStream.toByteArray();
-            inputStream.close();
-            outputStream.close();
+
+            return getProfileRes;
+        } catch (NoSuchElementException exception) {
+            throw new BaseException(EMPTY_USER);
         }
-        catch (IOException e) {
-            throw new Exception("파일을 변환하는데 문제가 발생했습니다.");
+        catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
         }
-        return fileArray;
     }
 }
