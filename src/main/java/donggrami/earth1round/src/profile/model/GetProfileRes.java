@@ -10,6 +10,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetProfileRes {
-    private String name;
+    private String name; //
+    private String nickname; //
     private String profileImg;
 }

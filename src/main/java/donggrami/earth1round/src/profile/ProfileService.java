@@ -34,7 +34,7 @@ public class ProfileService {
             GetProfileRes getProfileRes = null;
             if(user.isPresent()) {
                 Profile profile = profileRepository.findByUser(user.get());
-                getProfileRes = new GetProfileRes(profile.getName(), profile.getProfile_img());
+                getProfileRes = new GetProfileRes(profile.getName(), profile.getNickname(), profile.getProfile_img());
             }
 
             return getProfileRes;
